@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/tester.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>Рога и Толстовки</title>
+    <script type="text/javascript">
+        function sendTested() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/testers/change/any");
+            xhr.setRequestHeader("Content-type", "application/json");
+
+            var id_test= document.getElementById("id").value;
+            var status_test = document.getElementById("changeStatus").value;
+            var reviem_test = document.getElementById("dataTextTest").value;
+
+            xhr.send(JSON.stringify({"id": id_test, "is_tested": status_test, "reviem": reviem_test}));
+            xhr.onload = (e) => {
+                if (xhr.status === 400 || xhr.status === 500) {
+                    alert("Ошибка!");
+                } else {
+                    alert("Успех");
+                }
+            }
+        }
+        function getAnyToTest(number){
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/testers/select/model");
+            var data = {id: "", human_id: "", is_tested: "", urlmaket: "", nsp: "", material: "" , date_report: ""};
+            xhr.setRequestHeader("Content-type", "application/json");
+            var params = {};
+            xhr.send(JSON.stringify(params));
+
+            xhr.onload = (e) => {
+                if (xhr.status === 400 || xhr.status === 500) {
+                    alert("Пока что нечего тестировать")
+                } else {
+                    obj = JSON.parse(e.target.response, data);
+                    document.getElementById("id").innerHTML = obj.id;
+                    document.getElementById("human_id").innerHTML = obj.human_id;
+                    document.getElementById("whoCreateThis").innerHTML = obj.nsp;
+                    document.getElementById("DateReport").innerHTML = obj.date_report;
+                    document.getElementById("urlMaket").innerHTML = obj.urlmaket;
+                    if (obj.is_tested === 1) {
+                        document.getElementById("status").innerHTML = "Протестировано";
+                    } else if (obj.is_working === 0) {
+                        document.getElementById("status").innerHTML = "Не протестировано";
+                    } else if (obj.is_working === 2) {
+                        document.getElementById("status").innerHTML = "Брак или недоработка";
+                    }
+                    document.getElementById("material").src = obj.material;
+                }
+            };
+        }
+        function getModelsToTest(){
+            var id = document.getElementById("what").value;
+            if (id === null) {
+                id = 0;
+                document.getElementById("what").innerHTML = id;
+            }
+            getAnyToTest(0);
+        }
+        function getMaterialToTest(){
+            var id = document.getElementById("what").value;
+            if (id === null) {
+                id = 1;
+                document.getElementById("what").innerHTML = id;
+            }
+            getAnyToTest(1);
+        }
+    </script>
+</head>
+<body>
+<div id = "wrap">
+    <header>
+        <div class = "title">Рога и Толстовки</div>
+        <ul class = "menu">
+            <li><a href = "/logout">Выйти</a></li>
+        </ul>
+    </header>
+</div>
+<div id="main">
+
+    <div id="listOfEmployee" style="width: 98%;">
+        <table border=0>
+            <tr>
+                <td><a onclick=getModelsToTest()>Получить модель на тест</a></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <th><output name="who" id="whoCreateThis"></output></th>
+                <th style="width: 30%;"></th>
+                <th><output name="who" id="DateReport"></output></th>
+            </tr>
+            <tr>
+                <th><output name="url" id="urlMaket"></output></th>
+                <th><output name="material" id="material"></output></th>
+                <th><output name="status" id="status"></output></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th colspan="3"><input type="text" required id="dataTextTest" class="form-control" name="dataTextTest" placeholder="Результаты тестирования" style="width: 100%; height: 100%; font-size:14px; float: left;"></th>
+            </tr>
+            <tr>
+                <th><a onclick=sendTested()>Отправить</a></th>
+                <th><select class="form-control" id="changeStatus">
+                    <option value="1">Допущено</option>
+                    <option value="2">Недоработано</option>
+                </select></th>
+                <th><a onclick=getAnyToTest()>Следующий</a></th>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="center-bottom">
+    <p>Разработчик Родионов В. С., 2020</p>
+</div>
+<output name="id" id="id"></output>
+<output name="human_id" id="human_id"></output>
+<output name="what" id="what"></output>
+</body>
+</html>

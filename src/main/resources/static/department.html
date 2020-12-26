@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/department.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>Рога и Толстовки</title>
+    <script type="text/javascript">
+
+        function getInfoInDepartment(number) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/departmentSalary/select/whereHumanWork");
+            var data = {aid: "", ahuman_id: "", adepartment_name: "", aposition_name: "",
+                bid: "", bhuman_id: "", bdepartment_name: "", bposition_name: "",
+                cid: "", chuman_id: "", cdepartment_name: "", cposition_name: ""};
+            xhr.setRequestHeader("Content-type", "application/json");
+            var params = {"id" : number};
+            xhr.send(JSON.stringify(params));
+
+            xhr.onload = (e) => {
+                obj = JSON.parse(e.target.response, data);
+                document.getElementById("id").innerHTML = obj.id;
+                document.getElementById("aid").innerHTML = obj.aid;
+                document.getElementById("adepartment_name").innerHTML = obj.adepartment_name;
+                document.getElementById("aposition_name").innerHTML = obj.aposition_name;
+                if(obj.bdepartment_name === undefined){
+                    document.getElementById("bdepartment_name").innerHTML = "---";
+                    document.getElementById("bposition_name").innerHTML = "---";
+                } else {
+                    document.getElementById("bdepartment_name").innerHTML = obj.bdepartment_name;
+                    document.getElementById("bposition_name").innerHTML = obj.bposition_name;
+                    document.getElementById("bid").innerHTML = obj.bid;
+                }
+                if(obj.cdepartment_name === undefined) {
+                    document.getElementById("cdepartment_name").innerHTML = "---";
+                    document.getElementById("cposition_name").innerHTML = "---";
+                } else {
+                    document.getElementById("cdepartment_name").innerHTML = obj.cdepartment_name;
+                    document.getElementById("cposition_name").innerHTML = obj.cposition_name;
+                    document.getElementById("cid").innerHTML = obj.cid;
+                }
+            };
+
+        }
+        function getInfoByName() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/departmentSalary/select/ByHumanNSP");
+            var data = {id: "", aid: "", ahuman_id: "", adepartment_name: "", aposition_name: "", amoney: "",
+                bid: "", bhuman_id: "", bdepartment_name: "", bposition_name: "",bmoney: "",
+                cid: "", chuman_id: "", cdepartment_name: "", cposition_name: "", cmoney: ""};
+            xhr.setRequestHeader("Content-type", "application/json");
+            var NSP = document.getElementById("searchEmployee").value;
+            var params = {"nsp" : NSP};
+            xhr.send(JSON.stringify(params));
+
+            xhr.onload = (e) => {
+                obj = JSON.parse(e.target.response, data);
+                document.getElementById("id").innerHTML = obj.id;
+                document.getElementById("aid").innerHTML = obj.aid;
+                document.getElementById("adepartment_name").innerHTML = obj.adepartment_name;
+                document.getElementById("aposition_name").innerHTML = obj.aposition_name;
+                document.getElementById("amoney").innerHTML = obj.amoney;
+                if(obj.bdepartment_name === undefined){
+                    document.getElementById("bdepartment_name").innerHTML = "---";
+                    document.getElementById("bposition_name").innerHTML = "---";
+                    document.getElementById("bmoney").innerHTML = "---";
+                } else {
+                    document.getElementById("bdepartment_name").innerHTML = obj.bdepartment_name;
+                    document.getElementById("bposition_name").innerHTML = obj.bposition_name;
+                    document.getElementById("bmoney").innerHTML = obj.bmoney;
+                    document.getElementById("bid").innerHTML = obj.bid;
+                }
+                if(obj.cdepartment_name === undefined) {
+                    document.getElementById("cdepartment_name").innerHTML = "---";
+                    document.getElementById("cposition_name").innerHTML = "---";
+                    document.getElementById("cmoney").innerHTML = "---";
+                } else {
+                    document.getElementById("cdepartment_name").innerHTML = obj.cdepartment_name;
+                    document.getElementById("cposition_name").innerHTML = obj.cposition_name;
+                    document.getElementById("cmoney").innerHTML = obj.cmoney;
+                    document.getElementById("cid").innerHTML = obj.cid;
+                }
+            };
+        }
+
+        function createWorkability() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/departmentSalary/change/salary");
+            xhr.setRequestHeader("Content-type", "application/json");
+
+            var numberOfWork = document.getElementById("numberOfWork").value;
+            if (numberOfWork === '1') {
+                numberOfWork = document.getElementById("aid").value;
+            } else if(numberOfWork === '2') {
+                numberOfWork = document.getElementById("bid").value;
+            } else if(numberOfWork === '3') {
+                numberOfWork = document.getElementById("cid").value;
+            }
+            var id = document.getElementById("id").value;
+            var changedep = document.getElementById("changeDepartment").value;
+            var changepos = document.getElementById("changePosition").value;
+            var changepay = document.getElementById("changePay").value;
+            xhr.send(JSON.stringify({"id": id, "numberofwork": numberOfWork, "changedep": changedep, "changepos": changepos, "changepay": changepay}));
+            xhr.onload = (e) => {
+                if (xhr.status === 400 || xhr.status === 500) {
+                    alert("Ошибка!");
+                } else {
+                    alert("Успех");
+                }
+            }
+        }
+
+
+        // Функция изменения статуса работы
+        // Функция изменения зп
+    </script>
+</head>
+<body>
+<div id = "wrap">
+    <header>
+        <div class = "title">Рога и Толстовки</div>
+        <ul class = "menu">
+            <li><a href = "/logout">Выйти</a></li>
+        </ul>
+    </header>
+</div>
+<div id="main">
+    <!--Кнопка изменения статуса работы-->
+    <div id="changeWork">
+        <div id="windowWork">
+            <p align="center">Изменение статуса работоспособности</p>
+            <label for="changeWork">Статус</label>
+            <input type="text" required id="numberOfWork" class="form-control" name="numberOfWork"  style="width: 20px; height: 15px;">
+            <select class="form-control" id="changeDepartment">
+                <option value="Фин. и Юр. отдел">Фин. и Юр. отдел</option>
+                <option value="Отдел контроля качества">Отдел контроля качества</option>
+                <option value="Цех">Цех</option>
+                <option value="Отдел работы с персоналом">Отдел работы с персоналом</option>
+                <option value="Худ. совет">Худ. совет</option>
+                <option value="Отдел IT и обслуживания">Отдел IT и обслуживания</option>
+            </select>
+            <select class="form-control" id="changePosition">
+                <option value="Главный бухгалтер">Главный бухгалтер</option>
+                <option value="Бухгалтер">Бухгалтер</option>
+                <option value="Юрист">Юрист</option>
+                <option value="Начальник отдела тестирования">Начальник отдела тестирования</option>
+                <option value="Тестировщик">Тестировщик</option>
+                <option value="Контроллёр поставок">Контроллёр поставок</option>
+                <option value="Начальник цеха">Начальник цеха</option>
+                <option value="Начальник по ТБ">Начальник по ТБ</option>
+                <option value="Швея">Швея</option>
+                <option value="Кройщик">Кройщик</option>
+                <option value="Подмастерье">Подмастерье</option>
+                <option value="Уборщик">Уборщик</option>
+                <option value="Начальник работы с персоналом">Начальник работы с персоналом</option>
+                <option value="Контроллёр сотрудников">Контроллёр сотрудников</option>
+                <option value="Ведущий дизайнер">Ведущий дизайнер</option>
+                <option value="Дизайнер">Дизайнер</option>
+                <option value="Системный администратор">Системный администратор</option>
+                <option value="Разработчик">Разработчик</option>
+                <option value="Ремонтник">Ремонтник</option>
+                <option value="Начальник склада">Начальник склада</option>
+                <option value="Кладовщик">Кладовщик</option>
+                <option value="Охранник">Охранник</option>
+            </select>
+            <br>
+            <br>
+            <br>
+            <label for="changePay">Изменение З\П</label>
+            <input type="text" required id="changePay" class="form-control" name="changePay"  style="width: 60px; height: 15px;">
+            <br>
+            <a href="#" class="close">Отмена</a>
+            <a onclick=createWorkability()>Отправить</a>
+        </div>
+    </div>
+
+    <div id="listOfEmployee" style="width: 98%;">
+        <table border=0>
+            <tr>
+                <td></td>
+                <td colspan="2"><input type="text" required id="searchEmployee" class="form-control" name="searchEmployee" placeholder="Поиск сотрудника по ФИО" style="width: 90%; height: 15%; font-size:16px; font-family: Tahoma;"></td>
+                <td><a onclick=getInfoByName()>Поиск</a></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <output name="name" id="name"></output>
+                    <output name="name" id="surname"></output>
+                    <output name="name" id="partition"></output>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table border="0">
+                        <tr>
+                            <td>Отдел</td>
+                            <td>Должность</td>
+                        </tr>
+                        <tr>
+                            <td><output name="name" id="adepartment_name"></output></td>
+                            <td><output name="name" id="aposition_name"></output></td>
+                        </tr>
+                        <tr>
+                            <td><output name="name" id="bdepartment_name"></output></td>
+                            <td><output name="name" id="bposition_name"></output></td>
+                        </tr>
+                        <tr>
+                            <td><output name="name" id="cdepartment_name"></output></td>
+                            <td><output name="name" id="cposition_name"></output></td>
+                        </tr>
+                    </table>
+                </td>
+                <td colspan="2">
+                    <table border="0">
+                        <tr>
+                            <td>Зарплата</td>
+                        </tr>
+                        <tr>
+                            <td><output name="name" id="amoney"></output></td>
+                        </tr>
+                        <tr>
+                            <td><output name="name" id="bmoney"></output></td>
+                        </tr>
+                        <tr>
+                            <td><output name="name" id="cmoney"></output></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><a href="#changeWork">Изменить работу/должность</a></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="center-bottom">
+    <p>Разработчик Родионов В. С., 2020</p>
+</div>
+<output name="id" id="id"></output>
+<output name="aid" id="aid"></output>
+<output name="bid" id="bid"></output>
+<output name="сid" id="cid"></output>
+</body>
+</html>

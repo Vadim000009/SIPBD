@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/employee.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>Рога и Толстовки</title>
+    <script type="text/javascript">
+        function getHuman(number) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/human/select/human");
+            var data = {id: "", name: "", surname: "", partition: "", age: "", gender: "", is_working: "", phone: "", email:"", photo:""};
+            xhr.setRequestHeader("Content-type", "application/json");
+            var params = {"id" : number};
+            xhr.send(JSON.stringify(params));
+
+            xhr.onload = (e) => {
+                obj = JSON.parse(e.target.response, data);
+                document.getElementById("id").innerHTML = obj.id;
+                document.getElementById("name").innerHTML = obj.name;
+                document.getElementById("surname").innerHTML = obj.surname;
+                document.getElementById("partition").innerHTML = obj.partition;
+                document.getElementById("age").innerHTML = obj.age;
+                if (obj.gender === true) {
+                    document.getElementById("gender").innerHTML = "Женский";
+                } else {
+                    document.getElementById("gender").innerHTML = "Мужской"
+                }
+                if (obj.is_working === 1) {
+                    document.getElementById("is_working").innerHTML = "Работает";
+                } else if (obj.is_working === 0) {
+                    document.getElementById("is_working").innerHTML = "Уволен";
+                } else if (obj.is_working === 2) {
+                    document.getElementById("is_working").innerHTML = "На больничном";
+                } else if (obj.is_working === 3) {
+                    document.getElementById("is_working").innerHTML = "В отпуске";
+                }
+                document.getElementById("phone").innerHTML = obj.phone;
+                document.getElementById("email").innerHTML = obj.email;
+                document.getElementById("photo").src = obj.photo;
+            };
+
+        }
+        function createHuman() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/human/create/human");
+            xhr.setRequestHeader("Content-type", "application/json");
+
+            var user_fstName = document.getElementById("nameReg").value;
+            var user_secName = document.getElementById("secNameReg").value;
+            var paritionReg = document.getElementById("paritionReg").value;
+            var user_gender = document.getElementById("genderReg").value;
+            var ageReg = document.getElementById("ageReg").value;
+            var user_email = document.getElementById("emailReg").value;
+            var user_telephone = document.getElementById("phoneReg").value;
+            var file = document.getElementById("photoReg").files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+
+            reader.onload = (function (f) { return function (e) {
+                xhr.send(JSON.stringify({
+                    "name": user_fstName, "surname": user_secName, "partition": paritionReg,
+                    "gender": user_gender, "age": ageReg, "email": user_email, "phone": user_telephone,
+                    "photo": this.result
+                }));
+            }
+            }) (file);
+        }
+        function createRebuke() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/human/create/rebuke");
+            xhr.setRequestHeader("Content-type", "application/json");
+
+            var idHumanRebuke = document.getElementById("id").value;
+            var humanRebuke = document.getElementById("rebukePost").value;
+            xhr.send(JSON.stringify({"human_id": idHumanRebuke, "rebuke": humanRebuke}));
+            xhr.onload = (e) => {
+                if (xhr.status === 400 || xhr.status === 500) {
+                    alert("Ошибка!");
+                } else {
+                    alert("Успех");
+                }
+            }
+        }
+        function createWorkability() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/human/change/workability");
+            xhr.setRequestHeader("Content-type", "application/json");
+
+            var id = document.getElementById("id").value;
+            var changeWork = document.getElementById("changeWork").value;
+            xhr.send(JSON.stringify({"id": id, "is_working": changeWork}));
+            xhr.onload = (e) => {
+                if (xhr.status === 400 || xhr.status === 500) {
+                    alert("Ошибка!");
+                } else {
+                    alert("Успех");
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<div id = "wrap">
+    <header>
+        <ul class = "menuLeft" style="left: 0px; position: absolute; top: -10px;">
+            <ul>
+            <li><a onclick=getHuman(-1)>Получить список</a></li>
+            <li><a href="#addNewEmployee">Добавить сотрудника</a></li>
+            </ul>
+        </ul>
+        <div class = "title">Рога и Толстовки</div>
+        <ul class = "menu">
+            <li><a href = "/logout">Выйти</a></li>
+        </ul>
+    </header>
+</div>
+<div id="main">
+    <!--Кнопка добавления человека-->
+    <div id="addNewEmployee">
+        <div id="window">
+            <p align="center">Добавление нового сотрудника</p>
+            <label for="nameReg">Имя</label>
+            <input type="text" required class="form-control" id="nameReg" name="nameReg" placeholder="Имя" aria-describedby="nameReg" pattern="^[А-Яа-яЁё\s]+$">
+            <br>
+            <label for="secNameReg">Фамилия</label>
+            <input type="text" required id="secNameReg" class="form-control" name="secNameReg" placeholder="Фамилия" aria-describedby="surNameReg" pattern="^[А-Яа-яЁё]+$">
+            <br>
+            <label for="paritionReg">Отчество</label>
+            <input type="text" id="paritionReg" class="form-control" name="paritionReg" placeholder="Отчество" aria-describedby="patritionReg" pattern="^[А-Яа-яЁё\s]+$">
+            <br>
+            <label for="genderReg">Пол</label>
+            <select class="form-control" id="genderReg" onchange=>
+                <option value="false">Мужской</option>
+                <option value="true">Женский</option>
+            </select>
+            <br>
+            <label for="ageReg">Дата рождения</label>
+            <input type="date" id="ageReg" required class="form-control" name="ageReg">
+            <br>
+            <label for="emailReg">Эл. почта</label>
+            <input type="email" id="emailReg" required placeholder="e@ma.il" class="form-control" name="emailReg" pattern="">
+            <br>
+            <label for="phoneReg">Телефон</label>
+            <input type="tel" id="phoneReg" required placeholder="+7##########" class="form-control" name="phoneReg" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+            <br>
+
+            <label for="photoReg">Фото</label>
+            <input type="file" required class="form-control" id="photoReg" name="photoReg">
+            <a href="#" class="close">Отмена</a>
+            <a href="#" onclick=createHuman()>Отправить</a>
+        </div>
+    </div>
+
+    <!--Кнопка добавления замечаний-->
+    <div id="addNewRebuke">
+        <div id="windowRebuke">
+            <p align="center">Запись замечания сотруднику</p>
+            <label for="position">Должность</label>
+            <output name="position" id="position"></output>
+            <br>
+            <label for="rebukePost">Замечание</label><br>
+            <input type="text" required id="rebukePost" class="form-control" name="rebukePost" placeholder="Замечание" style="width: 390px; height: 200px; font-size:16px; font-family: Tahoma;">
+            <br>
+            <a href="#" class="close">Отмена</a>
+            <a onclick=createRebuke() >Отправить</a>
+        </div>
+    </div>
+
+    <!--Кнопка изменения статуса работы-->
+    <div id="changeWorkability">
+        <div id="windowWork">
+            <p align="center">Изменение статуса работоспособности</p>
+            <label for="changeWork">Статус</label>
+            <select class="form-control" id="changeWork" onchange=>
+                <option value="0">Уволен</option>
+                <option value="1">Работает</option>
+                <option value="2">На больничном</option>
+                <option value="3">В отпуске</option>
+            </select>
+            <br>
+            <a href="#" class="close">Отмена</a>
+            <a onclick=createWorkability()>Отправить</a>
+        </div>
+    </div>
+
+    <div id="listOfEmployee" style="width: 98%;">
+        <table border=0>
+            <tr>
+                <th colspan="4"><img height="300" width="300" id="photo" src=""></th>
+            </tr>
+            <tr>
+                <th><output name="surname" id="surname"></output></th>
+                <th><output name="name" id="name"></output></th>
+                <th colspan="2"><output name="partition" id="partition"></output></th>
+            </tr>
+            <tr>
+                <th colspan="2"><output name="gender" id="gender"></output></th>
+                <th colspan="2"><output name="age" id="age"></output></th>
+            </tr>
+            <tr>
+                <th><output name="phone" id="phone"></output></th>
+                <th><output name="email" id="email"></output></th>
+                <th colspan="2"><output name="is_working" id="is_working"></output></th>
+            </tr>
+            <tr>
+                <th><a onclick=getHuman(0)>Предыдущий</a></th>
+                <th><a href="#addNewRebuke">Замечание сотруднику</a></th>
+                <th><a href="#changeWorkability">Изменить статус</a></th>
+                <th><a onclick=getHuman(1)>Следующий</a></th>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="center-bottom">
+    <p>Разработчик Родионов В. С., 2020</p>
+</div>
+<output name="id" id="id"></output>
+</body>
+</html>

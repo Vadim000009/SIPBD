@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/storage.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>Рога и Толстовки</title>
+    <script type="text/javascript">
+        function getSupply(number) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/stock/select/supply");
+            var data = {name: "", quantity: ""};
+            xhr.setRequestHeader("Content-type", "application/json");
+            var params = {"stock_id" : number};
+            xhr.send(JSON.stringify(params));
+            xhr.onload = (e) => {
+                obj = JSON.parse(e.target.response, data);
+                document.getElementById("nameSup").innerHTML = obj.name;
+                document.getElementById("quantitySup").innerHTML = obj.quantity;
+            };
+
+        }
+
+        function addSupplyToStock() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/stock/add/supply");
+            var stock_id = document.getElementById("stock_id").value;
+            var addMaterial = document.getElementById("addMaterial").value;
+            var quantitymaterial = document.getElementById("quantitymaterial").value;
+            var who_sell = document.getElementById("who_sell").value;
+            xhr.onload = (e) => {
+                xhr.send(JSON.stringify({"stock_id": stock_id, "name": addMaterial, "quantity": quantitymaterial, "who_sell": who_sell}));
+            };
+        }
+
+        function addMaterialToWorkshop() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/stock/add/toWorkshop");
+            xhr.setRequestHeader("Content-type", "application/json");
+
+            var id = document.getElementById("stock_id").value;
+            var selectWS = document.getElementById("selectWS").value;
+            var selectMaterialToWS = document.getElementById("selectMaterialToWS").value;
+            var quantityToWS = document.getElementById("quantityToWS").value;
+            xhr.onload = (e) => {
+                xhr.send(JSON.stringify({"stock_id": id, "workshop_id": selectWS, "material_supply": selectMaterialToWS, "quantity_supply": quantityToWS}));
+            };
+        }
+    </script>
+</head>
+<body>
+<div id = "wrap">
+    <header>
+        <div class = "title">Рога и Толстовки</div>
+        <ul class = "menu">
+            <li><a href = "/logout">Выйти</a></li>
+        </ul>
+    </header>
+</div>
+<div id="main">
+
+    <!--Кнопка отправление материалов в цех-->
+    <div id="sendMaterials">
+        <div id="windowSendMaterials">
+            <p align="center">Отправление материала в цех</p>
+            <label for="selectWS">Выберите цех</label>
+            <select class="form-control" id="selectWS" onchange=>
+                <option value="1">Цех 1</option>
+                <option value="2">Цех 2</option>
+            </select>
+            <br>
+            <label for="selectMaterialToWS">Выберите материал</label>
+            <select class="form-control" id="selectMaterialToWS" onchange=>
+                <option value="Велсофт">Велсофт</option>
+                <option value="Флис">Флис</option>
+                <option value="Футер Трёхнитка">Футер Трёхнитка</option>
+                <option value="Футер Двухнитка">Футер Двухнитка</option>
+                <option value="Футер">Футер</option>
+                <option value="Хлопок">Хлопок</option>
+                <option value="Шерсть">Шерсть</option>
+            </select>
+            <br>
+            <label for="quantityToWS">Количество</label>
+            <input type="text" id="quantityToWS" class="form-control" name="quantityToWS" placeholder="Количество" aria-describedby="patritionReg" pattern="^[А-Яа-яЁё\s]+$">
+            <a href="#" class="close">Отмена</a>
+            <a onclick=addMaterialToWorkshop()>Отправить</a>
+        </div>
+    </div>
+
+    <!--Добавить материалы на склад-->
+    <div id="addMaterialsOnStock">
+        <div id="windowMaterialsOnStock">
+            <p align="center">Добавление материала на склад</p>
+            <label for="addMaterial">Наименование</label>
+            <select class="form-control" id="addMaterial" onchange=>
+                <option value="Велсофт">Велсофт</option>
+                <option value="Флис">Флис</option>
+                <option value="Футер Трёхнитка">Футер Трёхнитка</option>
+                <option value="Футер Двухнитка">Футер Двухнитка</option>
+                <option value="Футер">Футер</option>
+                <option value="Хлопок">Хлопок</option>
+                <option value="Шерсть">Шерсть</option>
+            </select>
+            <br>
+            <label for="who_sell">Кто производитель</label>
+            <input type="text" required id="who_sell" class="form-control" name="who_sell" placeholder="Имя продавца" aria-describedby="who_sell">
+            <br>
+            <label for="quantitymaterial">Количество</label>
+            <input type="text" required id="quantitymaterial" class="form-control" name="quantitymaterial" placeholder="Число" aria-describedby="quantitymaterial">
+            <a href="#" class="close">Отмена</a>
+            <a onclick=addSupplyToStock()>Отправить</a>
+        </div>
+    </div>
+
+    <div id="listOfStorage" style="width: 98%;">
+        <table border=1>
+            <tr>
+                <td style="left:0; width: 20%; height: 10%"><a href="#addMaterialsOnStock">Добавить материалы</a></td>
+                <td><a onclick=getSupply(-1)>Получить материалы со склада</a></td>
+                <td style="width: 30%; height: 10%;"><a href="#sendMaterials">Отправить материалы</a></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><a onclick=getSupply(0)>Предыдущий материал</a></td>
+                <td><a onclick=getSupply(1)>Следующий материал</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="center-bottom">
+    <p>Разработчик Родионов В. С., 2020</p>
+</div>
+<output name="stock_id" id="stock_id"></output>
+</body>
+</html>

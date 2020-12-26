@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/design.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>Рога и Толстовки</title>
+    <script type="text/javascript">
+        function changeMaket() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/design/change/maket");
+            xhr.setRequestHeader("Content-type", "application/json");
+            var id = document.getElementById("id").value;
+            var changeMaket = document.getElementById("changeMaket").value;
+            xhr.send(JSON.stringify({"id": id, "urlmaket": changeMaket}));
+            xhr.onload = (e) => {
+                if (xhr.status === 400 || xhr.status === 500) {
+                    alert("Ошибка!");
+                } else {
+                    alert("Успех");
+                }
+            }
+        }
+        function createHoody() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/design/create/model");
+            xhr.setRequestHeader("Content-type", "application/json");
+            var model_name = document.getElementById("nameHoody").value;
+            var material = document.getElementById("material").value;
+            var model_where = document.getElementById("maketInStock").value;
+            var file_photo = document.getElementById("photoToSend").files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file_photo);
+            reader.onload = (function (f) { return function (e) {
+                xhr.send(JSON.stringify({"name_hoody": model_name, "material": material, "urlmaket": model_where, "photo": this.result}));
+            }
+            }) (file_photo);
+        }
+        function getModel(number) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/design/select/model");
+            var data = {id: "", name_hoody: "", is_tested: "", is_allowed: "", human_id: "", urlmaket: "", material: "", nsp: "", photo: ""};
+            xhr.setRequestHeader("Content-type", "application/json");
+            var params = {"id" : number};
+            xhr.send(JSON.stringify(params));
+            xhr.onload = (e) => {
+                obj = JSON.parse(e.target.response, data);
+                document.getElementById("id").innerHTML = obj.id;
+                document.getElementById("NSPHuman").innerHTML = obj.nsp;
+                document.getElementById("nameHoods").innerHTML = obj.name_hoody;
+                if (obj.is_allowed === false) {
+                    document.getElementById("get_is_allowed").innerHTML = "Не принят";
+                } else {
+                    document.getElementById("get_is_allowed").innerHTML = "Принят";
+                }
+                document.getElementById("makesURL").innerHTML = obj.urlmaket;
+                document.getElementById("materialInHoods").innerHTML = obj.material;
+                document.getElementById("photoHoods").innerHTML = obj.photo;
+                if (obj.is_tested === 0) {
+                    document.getElementById("testedHoods").innerHTML = "Не протестировано";
+                } else if (obj.is_tested === 1) {
+                    document.getElementById("testedHoods").innerHTML = "Протестировано";
+                } else if (obj.is_tested === 2) {
+                    document.getElementById("testedHoods").innerHTML = "Требуется доработка";
+                }
+            };
+        }
+    </script>
+</head>
+<body>
+<div id = "wrap">
+    <header>
+        <div class = "title">Рога и Толстовки</div>
+        <ul class = "menu">
+            <li><a href = "/logout">Выйти</a></li>
+        </ul>
+    </header>
+</div>
+<div id="main">
+    <!--Кнопка добавления новой толстовки-->
+    <div id="addNewModel">
+        <div id="windowModel">
+            <p align="center">Добавление новой толстовки</p>
+            <label for="nameHoody">Название</label>
+            <input type="text" required class="form-control" id="nameHoody" name="nameHoody" placeholder="Имя" aria-describedby="nameHoody" pattern="^[А-Яа-яЁё\s]+$">
+            <br>
+            <label for="material">Материал</label>
+            <select class="form-control" id="material" onchange=>
+                <option value="Велсофт">Велсофт</option>
+                <option value="Флис">Флис</option>
+                <option value="Футер Трёхнитка">Футер Трёхнитка</option>
+                <option value="Футер Двухнитка">Футер Двухнитка</option>
+                <option value="Футер">Футер</option>
+                <option value="Хлопок">Хлопок</option>
+                <option value="Шерсть">Шерсть</option>
+            </select>
+            <br>
+            <label for="maketInStock">Макет</label>
+            <input type="text" id="maketInStock" required class="form-control" name="maketInStock">
+            <br>
+            <label for="photoToSend">Фото</label>
+            <input type="file" required class="form-control" id="photoToSend" name="photoToSend">
+            <a href="#" class="close">Отмена</a>
+            <a href="#" onclick=createHoody()>Отправить</a>
+        </div>
+    </div>
+
+    <div id="correctModel">
+        <div id="windowCorrect">
+            <p align="center">Изменение макета толстовки</p>
+            <label for="changeMaket">Макет</label>
+            <input type="text" id="changeMaket" required class="form-control" name="changeMaket">
+            <br>
+            <a href="#" class="close">Отмена</a>
+            <a onclick=changeMaket() >Отправить</a>
+        </div>
+    </div>
+
+    <div id="listOfModel" style="width: 98%;">
+        <table border=0>
+            <tr>
+                <td><a href="#addNewModel">Добавить новую модель</a></td>
+                <td><a onclick=getModel(-1)>Получить модели</a></td>
+                <td><a href="#correctModel">Исправить модель</a></td>
+            </tr>
+            <tr>
+                <td rowspan="3"><img height="300" width="300" id="photoHoods" src=""></td>
+                <td colspan=""><output name="nameHoods" id="nameHoods"></output></td>
+                <td><output name="get_is_allowed" id="get_is_allowed"></output></td>
+            </tr>
+            <tr>
+                <td><output name="NSPHuman" id="NSPHuman"></output></td>
+                <td><output name="makesURL" id="makesURL"></output></td>
+            </tr>
+            <tr>
+                <td><output name="materialInHoods" id="materialInHoods"></output></td>
+                <td><output name="testedHoods" id="testedHoods"></output></td>
+            </tr>
+            <tr>
+                <td><a onclick=getModel(0)>Предыдущий</a></td>
+                <td><a onclick=getModel(1)>Следующий</a></output></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="center-bottom">
+    <p>Разработчик Родионов В. С., 2020</p>
+</div>
+<output name="id" id="id"></output>
+</body>
+</html>

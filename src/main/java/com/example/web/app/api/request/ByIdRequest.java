@@ -1,6 +1,6 @@
 package com.example.web.app.api.request;
 
-public class UserByIdRequest {
+public class ByIdRequest {
     private Integer id;
 
     public Integer getId() {

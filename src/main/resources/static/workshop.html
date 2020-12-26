@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/workshop.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>Рога и Толстовки</title>
+    <script type="text/javascript">
+        function getWorkshop() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/workshop/select/workshop");
+            var data = {id: "", nsp: ""};
+            xhr.setRequestHeader("Content-type", "application/json");
+            var params = {"workshop_id" : 1};
+            xhr.send(JSON.stringify(params));
+            xhr.onload = (e) => {
+                obj = JSON.parse(e.target.response, data);
+                document.getElementById("workshop_id").innerHTML = obj.id;
+                document.getElementById("SNP").innerHTML = obj.nsp;
+            };
+
+        }
+        function sendProduction() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/workshop/send/production");
+            xhr.setRequestHeader("Content-type", "application/json");
+
+            var stockNumber = document.getElementById("stockNumber").value;
+            var reviem = document.getElementById("reviem").value;
+            var designModel = document.getElementById("designModel").value;
+            var quantityProduction = document.getElementById("quantityProduction").value;
+            var workshop_id = document.getElementById("workshop_id").value;
+
+            xhr.onload = (e) =>{
+                xhr.send(JSON.stringify({"stock_id": stockNumber, "modelhoody_id": designModel,
+                    "workshop_id": workshop_id, "quantity_supply": quantityProduction, "reviem": reviem}));
+            }
+        }
+
+        function getInfoAboutSupply() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/workshop/get/info");
+            xhr.setRequestHeader("Content-type", "application/json");
+
+            var workshop_id = document.getElementById("workshop_id").value;
+            var params = {"workshop_id" : workshop_id};
+            xhr.send(JSON.stringify(params));
+            xhr.onload = (e) => {
+                obj = JSON.parse(e.target.response, data);
+                alert(obj.count)
+            };
+        }
+    </script>
+</head>
+<body>
+<div id = "wrap">
+    <header>
+        <div class = "title">Рога и Толстовки</div>
+        <ul class = "menu">
+            <li><a href = "/logout">Выйти</a></li>
+        </ul>
+    </header>
+</div>
+<div id="main">
+    <div id="listOfWorkshops" style="width: 98%;">
+        <table border=0>
+            <tr>
+                <td style="left: 0; width: 18%"><a onclick=getWorkshop()>Получить данные о цехе</a></td>
+                <td><output name="SNP" id="SNP"></output></td>
+                <td>Цех №<output name="workshop_id" id="workshop_id"></output></td>
+                <td><a onclick=getInfoAboutSupply()>Узнать поставки на сегодня</a></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="width: 35%">
+                    <label for="stockNumber">Номер склада</label>
+                    <select class="form-control" id="stockNumber" onchange=>
+                    <option value="На Улице Пушкина">На Улице Пушкина</option>
+                    <option value="На Улице Кукушкина">На Улице Кукушкина</option>
+                </select></td>
+                <td colspan="2" rowspan="2"><textarea id="reviem" style="width: 99%; height: 100%;"></textarea></td>
+            </tr>
+            <tr>
+                <td><label for="designModel">Название модели</label>
+                    <select class="form-control" id="designModel" onchange=>
+                        <option value="1">кусок мытой овчарки</option>
+                        <option value="3">кусок немытой овчарки</option>
+                    </select></td>
+                <td><input name="quantityProduction" id="quantityProduction"></td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td><a onclick=sendProduction()>Отправить</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="center-bottom">
+    <p>Разработчик Родионов В. С., 2020</p>
+</div>
+</body>
+</html>

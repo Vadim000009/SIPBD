@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link href="css/login.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <title>Рога и Толстовки</title>
+</head>
+<body>
+<div class="header-panel"></div>
+<div class="container">
+    <div class="row text-center">
+        <div class="text-center col-12" style="text-align: center">
+            <h2>Представьтесь</h2>
+        </div>
+        <form class="form login-container" id="form login-container" method="POST">
+            <div class="login-container">
+                <label>Логин: </label>
+                <input type="text" name="username" id="input_user_name" placeholder="логин" required>
+                <br>
+                <label>Пароль: </label>
+                <input type="password" name="password" id="input_user_password" placeholder="пароль" required>
+                <br>
+                <input class="btn btn-primary btn-lg" type="submit" id="button" value="Войти" formaction="login">
+            </div>
+        </form>
+    </div>
+</div>
+<div class="center-bottom">
+    <p>ООО "Рога и Толстовки", Разработчик Родионов В. С., 2020</p>
+</div>
+</body>
+</html>
