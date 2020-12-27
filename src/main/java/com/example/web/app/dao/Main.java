@@ -60,11 +60,13 @@ public class Main implements InitializingBean {
 
     /*  Выдача сотрудника по id */
     public Human selectHumanById(int id) {
+        getMaxId();
         if (id == 0) { ID--; id = ID;
-            if (ID == 0) { ID = 1; id = 1;}
+            if (ID == 0) { ID = 1; id = 1; }
         } else if (id == 1) { ID++; id = ID;
         } else if (id == -1) { id = 1; ID = 1; }
         if (ID == 0) { ID = 1; id = 1; }
+        if (id >= MAXID) { id = MAXID; ID = MAXID; }
         String query = "select * from human where id = " + id;
         try (Connection conn = DriverManager.getConnection(dbPath, USER, PASS);
              Statement stat = conn.createStatement()) {
@@ -91,6 +93,7 @@ public class Main implements InitializingBean {
 
     /*  Создание нового сотрудника */
     public Boolean createNewHuman(Human human) {
+        getMaxId();
         String name = human.getName(), surname = human.getSurname(), patrition = human.getPartition(), phone = human.getPhone(), email = human.getEmail();
         Boolean gender = human.getGender();
         Date age = human.getAge();
@@ -227,5 +230,17 @@ public class Main implements InitializingBean {
         msg.setSubject("Рога и Толстовки");
         msg.setText("Вы внесены успешно в систему пользователей. Логин вам уже известен, пароль: " + password);
         javaMailSender.send(msg);
+    }
+
+    public void getMaxId() {
+        String query = ("SELECT max(id) FROM human;");
+        try (Connection conn = DriverManager.getConnection(dbPath, USER, PASS);
+             Statement stat = conn.createStatement()) {
+            ResultSet resultSet = stat.executeQuery(query);
+            resultSet.next();
+            MAXID = resultSet.getInt("max");;
+        } catch (SQLException ex) {
+            log.log(Level.WARNING, "Не удалось выполнить запрос");
+        }
     }
 }

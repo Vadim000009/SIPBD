@@ -41,11 +41,13 @@ public class Design implements InitializingBean {
 
     /*  Выдача модели по id */
     public ModelHoody selectModelById(int id) {
+        getMaxId();
         if (id == 0) { ID--; id = ID;
-            if (ID == 0) { ID = 1; id = 1;}
+            if (ID == 0) { ID = 1; id = 1; }
         } else if (id == 1) { ID++; id = ID;
         } else if (id == -1) { id = 1; ID = 1; }
         if (ID == 0) { ID = 1; id = 1; }
+        if (id >= MAXID) { id = MAXID; ID = MAXID; }
         String query = "select * from modelhoody where id = " + id;
         try (Connection conn = DriverManager.getConnection(dbPath, USER, PASS);
              Statement stat = conn.createStatement()) {
@@ -102,6 +104,17 @@ public class Design implements InitializingBean {
         } catch (SQLException ex) {
             log.log(Level.WARNING, "Ошибка изменения макета толстовки!\n", ex);
             return false;
+        }
+    }
+    public void getMaxId() {
+        String query = ("SELECT max(id) FROM modelhoody;");
+        try (Connection conn = DriverManager.getConnection(dbPath, USER, PASS);
+             Statement stat = conn.createStatement()) {
+            ResultSet resultSet = stat.executeQuery(query);
+            resultSet.next();
+            MAXID = resultSet.getInt("max");;
+        } catch (SQLException ex) {
+            log.log(Level.WARNING, "Не удалось выполнить запрос");
         }
     }
 }

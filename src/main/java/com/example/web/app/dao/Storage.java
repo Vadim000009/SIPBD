@@ -21,8 +21,6 @@ public class Storage implements InitializingBean {
 
     private Logger log = Logger.getLogger(getClass().getName());
 
-    private int ID = 1;
-    private int MAXID = 0;
     static final String dbPath = "jdbc:postgresql://192.168.56.101:5432/hornsandhooves";
     static final String USER = "USER_Storage"; // поменять
     static final String PASS = "asd78f3qkjhna";  // поменять
@@ -84,13 +82,4 @@ public class Storage implements InitializingBean {
             return false;
         }
     }
-
-//    public StringBuilder getMaterials (int id) {
-//        if (id == 0) { ID--; id = ID;
-//            if (ID == 0) { ID = 1; id = 1;}
-//        } else if (id == 1) { ID++; id = ID;
-//        } else if (id == -1) { id = 1; ID = 1; }
-//        if (ID == 0) { ID = 1; id = 1; }
-//        String query = "select * from stock where id = " + id;
-//    }
 }

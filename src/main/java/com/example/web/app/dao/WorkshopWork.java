@@ -20,8 +20,6 @@ public class WorkshopWork implements InitializingBean {
 
     private Logger log = Logger.getLogger(getClass().getName());
 
-    private int ID = 1;
-    private int MAXID = 0;
     static final String dbPath = "jdbc:postgresql://192.168.56.101:5432/hornsandhooves";
     static final String USER = "USER_Workshop"; // поменять
     static final String PASS = "asfd36ygsa8";  // поменять

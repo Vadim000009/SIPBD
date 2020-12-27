@@ -15,8 +15,6 @@ public class Tester implements InitializingBean {
 
     private Logger log = Logger.getLogger(getClass().getName());
 
-    private int ID = 1;
-    private int MAXID = 0;
     static final String dbPath = "jdbc:postgresql://192.168.56.101:5432/hornsandhooves";    // поменять
     static final String USER = "USER_Test";    // поменть
     static final String PASS = "67sfda7ew";  // поменять

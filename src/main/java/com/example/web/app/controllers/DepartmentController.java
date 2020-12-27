@@ -34,7 +34,7 @@ public class DepartmentController {
         return new ResponseEntity<>(sb, headers, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Получение данные о сотружнике по ФИО")
+    @ApiOperation(value = "Получение данные о сотруднике по ФИО")
     @RequestMapping(value = "select/ByHumanNSP", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StringBuilder> searchByNSP(@RequestBody ByNSPRequest NSP) {
         StringBuilder sb = ds.searchByNSP(NSP);

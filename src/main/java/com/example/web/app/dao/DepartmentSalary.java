@@ -55,11 +55,13 @@ public class DepartmentSalary implements InitializingBean {
     }
 
     public StringBuilder getInfoAboutHuman(int id) {
+        getMaxId();
         if (id == 0) { ID--; id = ID;
-            if (ID == 0) { ID = 1; id = 1;}
+            if (ID == 0) { ID = 1; id = 1; }
         } else if (id == 1) { ID++; id = ID;
         } else if (id == -1) { id = 1; ID = 1; }
         if (ID == 0) { ID = 1; id = 1; }
+        if (id >= MAXID) { id = MAXID; ID = MAXID; }
         String query = "SELECT * FROM department WHERE human_id=" + id;
         try (Connection conn = DriverManager.getConnection(dbPath, USER, PASS);
              Statement stat = conn.createStatement()) {
@@ -142,11 +144,22 @@ public class DepartmentSalary implements InitializingBean {
             query.append("INSERT INTO roles(login, role_name) VALUES ('").append(login).append("','").append(role).append("');");
             Connection conn2 = DriverManager.getConnection(dbPath, USER, PASS);
             PreparedStatement stat2 = conn2.prepareStatement(String.valueOf(query));
-            stat.execute();
+            stat2.execute();
             return true;
         } catch (SQLException ex) {
             log.log(Level.WARNING, "Ошибка выполнения запроса", ex);
             return false;
+        }
+    }
+    public void getMaxId() {
+        String query = ("SELECT max(id) FROM department;");
+        try (Connection conn = DriverManager.getConnection(dbPath, USER, PASS);
+             Statement stat = conn.createStatement()) {
+            ResultSet resultSet = stat.executeQuery(query);
+            resultSet.next();
+            MAXID = resultSet.getInt("max");;
+        } catch (SQLException ex) {
+            log.log(Level.WARNING, "Не удалось выполнить запрос");
         }
     }
 }
