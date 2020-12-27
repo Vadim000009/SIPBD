@@ -27,7 +27,7 @@
         function getAnyToTest(number){
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "api/testers/select/model");
-            var data = {id: "", human_id: "", is_tested: "", urlmaket: "", nsp: "", material: "" , date_report: ""};
+            var data = {id: "", human_id: "", is_tested: "", urlMaket: "", nsp: "", material: "" , date_report: ""};
             xhr.setRequestHeader("Content-type", "application/json");
             var params = {};
             xhr.send(JSON.stringify(params));
@@ -41,12 +41,12 @@
                     document.getElementById("human_id").innerHTML = obj.human_id;
                     document.getElementById("whoCreateThis").innerHTML = obj.nsp;
                     document.getElementById("DateReport").innerHTML = obj.date_report;
-                    document.getElementById("urlMaket").innerHTML = obj.urlmaket;
-                    if (obj.is_tested === 1) {
+                    document.getElementById("urlMaket").innerHTML = obj.urlMaket;
+                    if (obj.is_tested === '1') {
                         document.getElementById("status").innerHTML = "Протестировано";
-                    } else if (obj.is_working === 0) {
+                    } else if (obj.is_working === '0') {
                         document.getElementById("status").innerHTML = "Не протестировано";
-                    } else if (obj.is_working === 2) {
+                    } else if (obj.is_working === '2') {
                         document.getElementById("status").innerHTML = "Брак или недоработка";
                     }
                     document.getElementById("material").src = obj.material;
@@ -76,7 +76,9 @@
     <header>
         <div class = "title">Рога и Толстовки</div>
         <ul class = "menu">
-            <li><a href = "/logout">Выйти</a></li>
+            <form class="form logout-container" id="form logout-container" method="POST">
+            <li><input type="submit" formaction="logout" value="Выйти"></li>
+            </form>
         </ul>
     </header>
 </div>

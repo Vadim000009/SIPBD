@@ -57,7 +57,7 @@ public class Storage implements InitializingBean {
             stat.execute();
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Ошибка выполнения запроса. Вставка в бд. Причина: ", ex);
+            log.log(Level.WARNING, "Ошибка выполнения запроса. Добавление материалов на склад");
             return false;
         }
     }
@@ -78,7 +78,7 @@ public class Storage implements InitializingBean {
             stat.execute();
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Ошибка выполнения запроса. Вставка в бд. Причина: ", ex);
+            log.log(Level.WARNING, "Ошибка выполнения запроса. Отправка материалов");
             return false;
         }
     }

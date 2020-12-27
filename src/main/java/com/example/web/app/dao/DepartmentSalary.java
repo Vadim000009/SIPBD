@@ -49,7 +49,7 @@ public class DepartmentSalary implements InitializingBean {
             stat.execute();
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Ошибка");
+            log.log(Level.WARNING, "Ошибка при создании новой РАБоты для человека");
             return false;
         }
     }
@@ -80,7 +80,7 @@ public class DepartmentSalary implements InitializingBean {
             bigFloppa.append("}");
             return bigFloppa;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос. Получение информации о человеке");
             return new StringBuilder();
         }
     }
@@ -109,7 +109,7 @@ public class DepartmentSalary implements InitializingBean {
             bigFloppa.append("}");
             return bigFloppa;
         } catch (SQLException ex ) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос. Получение по ФИО из БД.", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос. Поиск по ФИО из БД");
             return new StringBuilder();
         }
     }
@@ -147,7 +147,7 @@ public class DepartmentSalary implements InitializingBean {
             stat2.execute();
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Ошибка выполнения запроса", ex);
+            log.log(Level.WARNING, "Ошибка выполнения запроса. Изменение ЗП и Должности");
             return false;
         }
     }

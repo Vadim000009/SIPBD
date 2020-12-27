@@ -86,7 +86,7 @@ public class Main implements InitializingBean {
             human.setPhoto(resultSet.getString("photo"));
             return human;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос. Создание Человека");
             return new Human();
         }
     }
@@ -125,7 +125,7 @@ public class Main implements InitializingBean {
             }
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Ошибка выполнения запроса. Вставка в бд. Причина: ", ex);
+            log.log(Level.WARNING, "Ошибка выполнения запроса. Вставка в бд");
             return false;
         }
     }
@@ -141,7 +141,7 @@ public class Main implements InitializingBean {
             stat.execute();
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Ошибка выполнения запроса. Запись замечания. Причина: ", ex);
+            log.log(Level.WARNING, "Ошибка выполнения запроса. Запись замечания");
             return false;
         }
     }
@@ -154,7 +154,7 @@ public class Main implements InitializingBean {
             stat.execute();
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Ошибка выполнения запроса. Изменение трудоспособности. Причина: ", ex);
+            log.log(Level.WARNING, "Ошибка выполнения запроса. Изменение трудоспособности");
             return false;
         }
     }
@@ -172,7 +172,7 @@ public class Main implements InitializingBean {
 
             return String.valueOf(finalString);
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос");
             return new String();
         }
     }
@@ -189,7 +189,7 @@ public class Main implements InitializingBean {
             int id = resultSet.getInt("id");;
             return id;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос");
             return 0;
         }
     }
@@ -204,7 +204,7 @@ public class Main implements InitializingBean {
             String login = resultSet.getString("login");
             return login;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос");
             return new String();
         }
     }
@@ -219,7 +219,7 @@ public class Main implements InitializingBean {
             int id = resultSet.getInt("id");;
             return id;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос");
             return 0;
         }
     }

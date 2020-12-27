@@ -10,12 +10,12 @@ public class ByEmailRequest {
 
     public static AuthorizationUser selectUserByEmail(String login) {
         StringBuilder query = new StringBuilder();
+        AuthorizationUser user = new AuthorizationUser();
         query.append("SELECT login, password FROM human WHERE login = '").append(login).append("'");
         try(Connection conn = DriverManager.getConnection(dbPath, USER, PASS);
             Statement stat = conn.createStatement()) {
             ResultSet resultSet = stat.executeQuery(String.valueOf(query));
             resultSet.next();
-            AuthorizationUser user = new AuthorizationUser();
             user.setLogin(resultSet.getString("login"));
             user.setPassword(resultSet.getString("password"));
             query.setLength(0);
@@ -39,7 +39,7 @@ public class ByEmailRequest {
                 }
             return user;
         } catch (SQLException e) {
-            System.out.println("Ошибка получения пользователя из БД при аутентификации: " + e.getMessage());
+            System.out.println("Ошибка получения пользователя из БД при аутентификации - У пользователя нет роли!");
             return new AuthorizationUser();
         }
     }

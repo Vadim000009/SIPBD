@@ -67,7 +67,7 @@ public class Design implements InitializingBean {
             mh.setPhoto(resultSet.getString("photo"));
             return mh;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Ошибка выбора толстовки!\n", ex);
+            log.log(Level.WARNING, "Ошибка выбора толстовки!");
             return new ModelHoody();
         }
     }
@@ -88,7 +88,7 @@ public class Design implements InitializingBean {
             test.createNewModelToTest(id, urlmaket, material);
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Ошибка создания толстовки!\n", ex);
+            log.log(Level.WARNING, "Ошибка создания толстовки!");
             return false;
         }
     }
@@ -102,7 +102,7 @@ public class Design implements InitializingBean {
             stat.execute();
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Ошибка изменения макета толстовки!\n", ex);
+            log.log(Level.WARNING, "Ошибка изменения макета толстовки");
             return false;
         }
     }

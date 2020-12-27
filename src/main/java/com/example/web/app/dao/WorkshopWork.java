@@ -57,7 +57,7 @@ public class WorkshopWork implements InitializingBean {
             ws.setNSP(main.getNSP(rs.getInt("workshopboss")));
             return ws;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос. Узнать, кто босс сия цеха");
             return new Workshop();
         }
     }
@@ -77,7 +77,7 @@ public class WorkshopWork implements InitializingBean {
             bdr.setHowManySupply(rs.getInt("count"));
             return bdr;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос. Узнать, сколько сегодня поставок");
             return new ByDateRequest();
         }
     }
@@ -98,7 +98,7 @@ public class WorkshopWork implements InitializingBean {
             rs.next();
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос. Отправка продукции");
             return false;
         }
     }

@@ -63,7 +63,7 @@ public class Tester implements InitializingBean {
             tr.setUrlMaket(resultSet.getString("urlmaket"));
             return tr;
     } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос. Получение модели на тест");
             return new TestReport();
         }
     }
@@ -79,7 +79,7 @@ public class Tester implements InitializingBean {
             stat.execute();
             return true;
         } catch (SQLException ex) {
-            log.log(Level.WARNING, "Не удалось выполнить запрос", ex);
+            log.log(Level.WARNING, "Не удалось выполнить запрос. Изменения статуса тестирования");
             return false;
         }
     }
