@@ -55,7 +55,7 @@
                 }
                 document.getElementById("makesURL").innerHTML = obj.urlmaket;
                 document.getElementById("materialInHoods").innerHTML = obj.material;
-                document.getElementById("photoHoods").innerHTML = obj.photo;
+                document.getElementById("photo").innerHTML = obj.photo;
                 if (obj.is_tested === 0) {
                     document.getElementById("testedHoods").innerHTML = "Не протестировано";
                 } else if (obj.is_tested === 1) {
@@ -126,7 +126,7 @@
                 <td><a href="#correctModel">Исправить модель</a></td>
             </tr>
             <tr>
-                <td rowspan="3"><img height="300" width="300" id="photoHoods" src=""></td>
+                <td rowspan="3"><img height="300" width="300" id="photo" src=""></td>
                 <td colspan=""><output name="nameHoods" id="nameHoods"></output></td>
                 <td><output name="get_is_allowed" id="get_is_allowed"></output></td>
             </tr>
